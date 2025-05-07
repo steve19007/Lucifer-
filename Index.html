@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Chat</title>
+  <style>
+    #chat { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
+    #msg { width: 70%; padding: 8px; }
+    #send { padding: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Realtime Chat App</h2>
+  <div id="chat"></div>
+  <input type="text" id="msg" placeholder="Type a message..." />
+  <button id="send">Send</button>
+
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDjaF1PZ0pRm-MQi0QVWuZ_xAATTFhkxKU",
+      authDomain: "chat-app-5762f.firebaseapp.com",
+      databaseURL: "https://chat-app-5762f-default-rtdb.firebaseio.com",
+      projectId: "chat-app-5762f",
+      storageBucket: "chat-app-5762f.appspot.com",
+      messagingSenderId: "1810950853075",
+      appId: "1:1810950853075:web:c7332d2db8dbce2e782f26"
+    };
+
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+
+    document.getElementById("send").onclick = function () {
+      const msg = document.getElementById("msg").value;
+      if (msg.trim() !== "") {
+        db.ref("messages").push({ text: msg });
+        document.getElementById("msg").value = "";
+      }
+    };
+
+
+    db.ref("messages").on("child_added", function (data) {
+      const chat = document.getElementById("chat");
+      const div = document.createElement("div");
+      div.textContent = data.val().text;
+      chat.appendChild(div);
+    });
+  </script>
+</body>
+</html>
